@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "my-school-app",
+    "slug": "my-school-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/gnu_ginu.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/gnu_ginu.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E0F2FE"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/gnu_ginu.png",
+        "backgroundColor": "#E0F2FE"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    }
+  }
+}
