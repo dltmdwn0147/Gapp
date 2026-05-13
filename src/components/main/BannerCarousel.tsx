@@ -128,10 +128,8 @@ export default function BannerCarousel() {
             >
                 {/* 🌟 왼쪽: 아이콘과 타이틀 조합 */}
                 <View className="flex-row items-center gap-1.5">
-                    <Sparkles size={22} color="#3b82f6" /> {/* 시원한 파란색 포인트 아이콘 */}
-                    <Text className="text-xl font-extrabold text-gray-900 tracking-tight">
-                        학교행사
-                    </Text>
+                    <Sparkles size={22} color="#3b82f6" />
+                    <Text className="text-xl font-extrabold text-gray-900 tracking-tight">학교행사</Text>
                 </View>
 
                 {/* 🌟 오른쪽: '더보기' 버튼 (사용자 경험 향상) */}
@@ -230,8 +228,7 @@ export default function BannerCarousel() {
                     return (
                         <View
                             key={index}
-                            className={`h-1.5 rounded-full transition-all duration-300 ${realIndex === index ? 'w-4 bg-blue-600' : 'w-1.5 bg-gray-300'
-                                }`}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${realIndex === index ? 'w-4 bg-blue-600' : 'w-1.5 bg-gray-300'}`}
                         />
                     );
                 })}
