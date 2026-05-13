@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Dimensions, NativeSyntheticEvent, Image, NativeScrollEvent } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { BannerItem } from '../types';
+import { BannerItem } from '../../types';
 
 const { width: windowWidth } = Dimensions.get('window');
 
@@ -117,9 +117,8 @@ export default function DeptBannerCarousel() {
             >
                 {/* 🌟 왼쪽: 아이콘과 타이틀 조합 */}
                 <View className="flex-row items-center gap-1.5">
-                    <Text className="text-xl font-extrabold text-gray-900 tracking-tight">
-                        우리 학과 소식 🔥
-                    </Text>
+                    {/* 태그를 바짝 붙여서 불필요한 공백 문자 생성을 방지합니다 */}
+                    <Text className="text-xl font-extrabold text-gray-900 tracking-tight">우리 학과 소식 🔥</Text>
                 </View>
 
                 {/* 🌟 오른쪽: '더보기' 버튼 (사용자 경험 향상) */}
@@ -177,7 +176,9 @@ export default function DeptBannerCarousel() {
                                     <View className="bg-white/20 self-start px-2 py-0.5 rounded-md mb-1.5">
                                         <Text className="text-[10px] text-white font-bold">{item.date}</Text>
                                     </View>
-                                    <Text className="text-[11px] text-white/90 ml-1">📍 {item.place}</Text>
+                                    <Text className="text-[11px] text-white/90 ml-1">
+                                        {`📍 ${item.place}`}
+                                    </Text>
                                 </View>
                             </View>
 

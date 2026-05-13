@@ -1,13 +1,11 @@
-// ✨ 1. Reanimated import는 무조건 1빠로! (아까 해결한 에러)
-import 'react-native-reanimated';
+import "react-native-reanimated";
+import "./global.css";
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatusBar } from "expo-status-bar";
-import "./global.css"; // NativeWind CSS 설정
 
-// ✨ 2. 방금 만든 SplashView 컴포넌트 불러오기
+
 import SplashView from './src/components/common/SplashView';
-// ✨ 기존 메인 화면 불러오기
 import MainScreen from "./src/screens/MainScreen";
 
 export default function App() {
