@@ -199,7 +199,7 @@ export default function DeptBannerCarousel() {
                     return (
                         <View
                             key={index}
-                            className={`h-1.5 rounded-full transition-all duration-300 ${realIndex === index ? 'w-4 bg-indigo-600' : 'w-1.5 bg-gray-300'}`}
+                            className={`h-1.5 rounded-full ${realIndex === index ? 'w-4 bg-indigo-600' : 'w-1.5 bg-gray-300'}`}
                         />
                     );
                 })}
