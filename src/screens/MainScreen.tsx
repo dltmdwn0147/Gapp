@@ -1,5 +1,5 @@
 // src/screens/MainScreen.tsx
-import React, { useState } from 'react'; // ✨ useState 추가
+import React from 'react'; // ✨ useState 제거
 import { ScrollView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '../components/common/Header';
@@ -7,11 +7,11 @@ import LoginPrompt from '../components/main/LoginPrompt';
 import BannerCarousel from '../components/main/BannerCarousel';
 import DeptBannerCarousel from '../components/main/DeptBannerCarousel';
 import MenuSection from '../components/main/MenuSection';
-import BottomNav from '../components/common/BottomNav';
+import { AuthContext } from '../contexts/AuthContext'; // ✨ AuthContext 임포트 경로 수정
 
 export default function MainScreen() {
-    // 🌟 핵심: 여기서 로그인 상태를 관리합니다!
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // 🌟 전역 컨텍스트에서 로그인 상태를 가져옵니다.
+    const { isLoggedIn, setIsLoggedIn } = React.useContext(AuthContext);
 
     return (
         <LinearGradient
@@ -19,7 +19,7 @@ export default function MainScreen() {
             // 🌟 locations를 지우고 start, end를 추가해 은은한 사선 그라데이션 완성!
             start={{ x: 0, y: 0 }}
             end={{ x: 0.8, y: 1 }}
-            className="flex-1"
+            className="flex-1 pt-10"
         >
             <Header />
 
@@ -30,10 +30,7 @@ export default function MainScreen() {
                 contentContainerStyle={{ paddingBottom: 120 }}
             >
                 {/* 🌟 LoginPrompt에 현재 상태와 상태를 바꿀 수 있는 함수(리모컨)를 던져줍니다 */}
-                <LoginPrompt
-                    isLoggedIn={isLoggedIn}
-                    setIsLoggedIn={setIsLoggedIn}
-                />
+                <LoginPrompt />
 
                 {/* 🌟 로그인 상태에 따라 화면 배치 변경 */}
                 {isLoggedIn ? (
@@ -52,8 +49,6 @@ export default function MainScreen() {
                 )}
             </ScrollView>
 
-            {/* 바텀 네비게이션은 스크롤 바깥에 위치해야 고정됩니다 */}
-            <BottomNav isLoggedIn={isLoggedIn} />
         </LinearGradient>
     );
 }

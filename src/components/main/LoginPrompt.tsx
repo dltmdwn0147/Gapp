@@ -1,22 +1,16 @@
-// src/components/LoginPrompt.tsx
-import React, { useState } from 'react'; // 🌟 useState 추가
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { QrCode, LogOut } from 'lucide-react-native';
 import LoginModal from '../../modals/LoginModal';
 import QrModal from '../../modals/QrModal';
+import { AuthContext } from '../../contexts/AuthContext';
 
-interface LoginPromptProps {
-    isLoggedIn: boolean;
-    setIsLoggedIn: (value: boolean) => void;
-}
-
-export default function LoginPrompt({ isLoggedIn, setIsLoggedIn }: LoginPromptProps) {
-    // 🌟 모달의 열림/닫힘 상태를 관리합니다.
+export default function LoginPrompt() {
+    const { isLoggedIn, setIsLoggedIn } = React.useContext(AuthContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isQrVisible, setIsQrVisible] = useState(false);
 
     const handleRefreshQr = () => {
-        // 여기에 새로고침 로직 (예: API 호출)을 넣으세요.
         console.log("QR 코드가 새로고침되었습니다.");
     };
 
@@ -27,36 +21,31 @@ export default function LoginPrompt({ isLoggedIn, setIsLoggedIn }: LoginPromptPr
         name: "이승주"
     };
 
-    // 로그아웃용 (임시)
     const handleLogout = () => {
         setIsLoggedIn(false);
     };
 
-    // 로그인 성공 시 실행될 함수
     const handleLoginSuccess = () => {
-        setIsModalVisible(false); // 모달 닫기
-        setIsLoggedIn(true);      // 로그인 상태로 변경
+        setIsModalVisible(false);
+        setIsLoggedIn(true);
     };
 
-    // 1. 로그인 전 디자인
     if (!isLoggedIn) {
         return (
-            <View className="mx-5 my-2 gap-y-3">
-                {/* 1. 메인 로그인 카드 */}
-                <View className="flex-row items-center justify-between rounded-2xl bg-white p-5 shadow-sm border border-gray-50">
-                    <Text className="text-base font-medium text-gray-700 leading-tight">
+            <View style={styles.loginCardContainer}>
+                <View style={styles.loginCard}>
+                    <Text style={styles.loginText}>
                         {`로그인하고 맞춤 혜택을\n만나보세요!`}
                     </Text>
                     <TouchableOpacity
-                        onPress={() => setIsModalVisible(true)} // 🌟 클릭 시 모달 오픈
+                        onPress={() => setIsModalVisible(true)}
                         activeOpacity={0.7}
-                        className="bg-orange-100 px-4 py-2 rounded-xl"
+                        style={styles.loginButton}
                     >
-                        <Text className="font-bold text-orange-600">로그인</Text>
+                        <Text style={styles.loginButtonText}>로그인</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* 🌟 실제 로그인 입력 모달 (배경 흐려지는 효과 포함) */}
                 <LoginModal
                     visible={isModalVisible}
                     onClose={() => setIsModalVisible(false)}
@@ -67,32 +56,29 @@ export default function LoginPrompt({ isLoggedIn, setIsLoggedIn }: LoginPromptPr
         );
     }
 
-    // 2. 로그인 후 디자인
     return (
-        <View className="mx-5 my-2 rounded-2xl bg-white p-4 shadow-sm border border-gray-100">
-            <View className="flex-row justify-between items-center">
-                {/* 좌측: 학생 정보 */}
-                <View className="flex-1 mr-4">
-                    <View className="bg-blue-50 px-2 py-0.5 rounded self-start mb-1">
-                        <Text className="text-blue-600 text-[9px] font-bold">{studentInfo.college}</Text>
+        <View style={styles.infoCard}>
+            <View style={styles.infoRow}>
+                <View style={styles.studentInfoArea}>
+                    <View style={styles.collegeBadge}>
+                        <Text style={styles.collegeText}>{studentInfo.college}</Text>
                     </View>
-                    <Text className="text-lg font-bold text-gray-900">{studentInfo.name}</Text>
-                    <Text className="text-gray-400 text-xs mt-0.5">
+                    <Text style={styles.nameText}>{studentInfo.name}</Text>
+                    <Text style={styles.idText}>
                         {studentInfo.department} · {studentInfo.id}
                     </Text>
                 </View>
 
-                {/* 우측: 액션 버튼 (로그아웃 + QR) */}
-                <View className="flex-row items-center gap-x-2">
+                <View style={styles.actionButtons}>
                     <TouchableOpacity
                         onPress={() => setIsQrVisible(true)}
-                        className="bg-blue-50 p-2.5 rounded-xl border border-blue-100"
+                        style={styles.qrButton}
                     >
                         <QrCode size={20} color="#2563eb" />
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handleLogout}
-                        className="bg-gray-50 p-2.5 rounded-xl"
+                        style={styles.logoutButton}
                     >
                         <LogOut size={20} color="#9ca3af" />
                     </TouchableOpacity>
@@ -104,6 +90,107 @@ export default function LoginPrompt({ isLoggedIn, setIsLoggedIn }: LoginPromptPr
                 onRefresh={handleRefreshQr}
             />
         </View>
-
     );
 }
+
+const styles = StyleSheet.create({
+    loginCardContainer: {
+        marginHorizontal: 20,
+        marginVertical: 8,
+    },
+    loginCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#f9fafb',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    loginText: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#374151',
+        lineHeight: 22,
+        flex: 1,
+    },
+    loginButton: {
+        backgroundColor: '#ffedd5',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 12,
+    },
+    loginButtonText: {
+        fontWeight: 'bold',
+        color: '#ea580c',
+    },
+    infoCard: {
+        marginHorizontal: 20,
+        marginVertical: 8,
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#f3f4f6',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    studentInfoArea: {
+        flex: 1,
+        marginRight: 16,
+    },
+    collegeBadge: {
+        backgroundColor: '#eff6ff',
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 4,
+        alignSelf: 'flex-start',
+        marginBottom: 4,
+    },
+    collegeText: {
+        color: '#2563eb',
+        fontSize: 9,
+        fontWeight: 'bold',
+    },
+    nameText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#111827',
+    },
+    idText: {
+        color: '#9ca3af',
+        fontSize: 12,
+        marginTop: 2,
+    },
+    actionButtons: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    qrButton: {
+        backgroundColor: '#eff6ff',
+        padding: 10,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#dbeafe',
+        marginRight: 8,
+    },
+    logoutButton: {
+        backgroundColor: '#f9fafb',
+        padding: 10,
+        borderRadius: 12,
+    }
+});
