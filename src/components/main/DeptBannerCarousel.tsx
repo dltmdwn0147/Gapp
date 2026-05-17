@@ -3,6 +3,9 @@ import { View, Text, FlatList, TouchableOpacity, Dimensions, NativeSyntheticEven
 import { ChevronRight } from 'lucide-react-native';
 import { BannerItem } from '../../types';
 
+import { AuthContext } from '../../contexts/AuthContext';
+import { DEPT_BANNER_DATA_BY_DEPT } from '../../data/deptBannerData';
+
 const { width: windowWidth } = Dimensions.get('window');
 
 // 📏 기존 배너와 동일한 비율 유지
@@ -10,68 +13,34 @@ const CAROUSEL_WIDTH = windowWidth * 0.60;
 const CAROUSEL_GAP = 12;
 const SCREEN_PADDING = 20;
 
-// ✨ 학과 행사 성격에 맞춘 새로운 데이터 세팅
-const DEPT_BANNER_DATA: BannerItem[] = [
-    {
-        id: 1,
-        bg: 'bg-indigo-700',
-        imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=600&auto=format&fit=crop',
-        title: '코딩의 한계에\n도전하라',
-        subtitle: '컴퓨터공학과 해커톤',
-        date: '2025.07.05(토) - 07.06(일)',
-        place: 'IT 교육관 301호',
-        content: '24시간 동안 몰입하여 개발하고 상금도 쟁취할 수 있는 열정 넘치는 해커톤.'
-    },
-    {
-        id: 2,
-        bg: 'bg-rose-600',
-        imageUrl: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=600&auto=format&fit=crop',
-        title: '함께 만드는\n즐거운 추억',
-        subtitle: '학과 연합 MT',
-        date: '2025.08.20(수) - 08.22(금)',
-        place: '대성리 푸른 계곡',
-        content: '여름 방학의 낭만을 가득 담은 학과 구성원들과의 즐거운 2박 3일 여행.'
-    },
-    {
-        id: 3,
-        bg: 'bg-cyan-600',
-        imageUrl: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=600&auto=format&fit=crop',
-        title: '선배가 들려주는\n진짜 사회 이야기',
-        subtitle: '졸업생 초청 멘토링',
-        date: '2025.09.15(월) 18:00',
-        place: '멀티미디어실',
-        content: '현직에 계신 선배님들께 듣는 생생한 직무 분석과 취업 준비 노하우.'
-    },
-    {
-        id: 4,
-        bg: 'bg-violet-600',
-        imageUrl: 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?q=80&w=600&auto=format&fit=crop',
-        title: '우리의 손으로\n이끄는 학과',
-        subtitle: '정기 학생회 선거',
-        date: '2025.11.10(월) - 11.12(수)',
-        place: '학과 사무실 앞',
-        content: '우리 학과의 내일을 책임질 차기 학생회를 직접 투표로 선정하는 시간.'
-    },
-    {
-        id: 5,
-        bg: 'bg-orange-500',
-        imageUrl: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=600&auto=format&fit=crop',
-        title: '전공 역량의\n결실',
-        subtitle: '졸업 작품 전시회',
-        date: '2025.12.01(월) - 12.03(수)',
-        place: '학술 문화관 1층',
-        content: '4년간의 학업을 마무리하며 직접 개발한 멋진 작품들을 선보이는 자리.'
-    },
-];
-
 const INFINITE_MULTIPLIER = 200;
-const bannerData = Array(INFINITE_MULTIPLIER).fill(DEPT_BANNER_DATA).flat();
 
 export default function DeptBannerCarousel() {
-    const MIDDLE_INDEX = DEPT_BANNER_DATA.length * (INFINITE_MULTIPLIER / 2);
+    const { userInfo, isLoggedIn } = React.useContext(AuthContext);
+    
+    // 로그인 안 되어 있거나 정보가 없으면 기본값으로 전자공학부(또는 첫 번째 항목) 노출
+    const userDept = isLoggedIn && userInfo?.department ? userInfo.department : '전자공학부';
+    const currentDeptBannerData = DEPT_BANNER_DATA_BY_DEPT[userDept] || DEPT_BANNER_DATA_BY_DEPT['전자공학부'];
+
+    // 부드러운 무한 스크롤을 위해 데이터 뻥튀기
+    const bannerData = React.useMemo(() => {
+        return Array(INFINITE_MULTIPLIER).fill(currentDeptBannerData).flat();
+    }, [currentDeptBannerData]);
+
+    const MIDDLE_INDEX = currentDeptBannerData.length * (INFINITE_MULTIPLIER / 2);
+    
     const [currentIndex, setCurrentIndex] = useState(MIDDLE_INDEX);
     const flatListRef = useRef<FlatList>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 학과가 변경되면 스크롤 위치 초기화
+    useEffect(() => {
+        setCurrentIndex(MIDDLE_INDEX);
+        // 레이아웃이 잡히기 전일 수 있으므로 약간의 딜레이 후 이동
+        setTimeout(() => {
+            flatListRef.current?.scrollToIndex({ index: MIDDLE_INDEX, animated: false });
+        }, 100);
+    }, [userDept, MIDDLE_INDEX]);
 
     const startAutoPlay = useCallback(() => {
         stopAutoPlay();
@@ -86,7 +55,7 @@ export default function DeptBannerCarousel() {
             const nextOffset = nextIndex * (CAROUSEL_WIDTH + CAROUSEL_GAP);
             flatListRef.current?.scrollToOffset({ offset: nextOffset, animated: true });
         }, 3500); // 학과 소식은 조금 더 천천히 읽을 수 있게 3.5초로 설정
-    }, [currentIndex, MIDDLE_INDEX]);
+    }, [currentIndex, MIDDLE_INDEX, bannerData.length]);
 
     const stopAutoPlay = useCallback(() => {
         if (timerRef.current) {
@@ -100,13 +69,20 @@ export default function DeptBannerCarousel() {
         return () => stopAutoPlay();
     }, [startAutoPlay, stopAutoPlay]);
 
-    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const contentOffset = event.nativeEvent.contentOffset.x;
-        let index = Math.round(contentOffset / (CAROUSEL_WIDTH + CAROUSEL_GAP));
-        if (index !== currentIndex && index >= 0 && index < bannerData.length) {
+    const handleScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const xOffset = event.nativeEvent.contentOffset.x;
+        const index = Math.round(xOffset / (CAROUSEL_WIDTH + CAROUSEL_GAP));
+
+        // 너무 끝에 도달하면 중간으로 슬쩍 이동
+        if (index <= currentDeptBannerData.length || index >= bannerData.length - currentDeptBannerData.length) {
+            const resetIndex = MIDDLE_INDEX + (index % currentDeptBannerData.length);
+            flatListRef.current?.scrollToIndex({ index: resetIndex, animated: false });
+            setCurrentIndex(resetIndex);
+        } else {
             setCurrentIndex(index);
         }
-    };
+        startAutoPlay();
+    }, [bannerData.length, currentDeptBannerData.length, MIDDLE_INDEX, startAutoPlay]);
 
     return (
         <View className="my-4">
@@ -146,7 +122,8 @@ export default function DeptBannerCarousel() {
                 disableIntervalMomentum={true}
                 snapToAlignment="start"
                 decelerationRate="fast"
-                onScroll={handleScroll}
+                onScrollEndDrag={handleScrollEnd}
+                onMomentumScrollEnd={handleScrollEnd}
                 scrollEventThrottle={16}
                 contentContainerStyle={{ paddingHorizontal: SCREEN_PADDING }}
                 ItemSeparatorComponent={() => <View style={{ width: CAROUSEL_GAP }} />}
@@ -155,7 +132,7 @@ export default function DeptBannerCarousel() {
                     <TouchableOpacity
                         activeOpacity={0.9}
                         style={{ width: CAROUSEL_WIDTH }}
-                        className={`h-[400px] rounded-[24px] shadow-sm overflow-hidden ${item.bg}`}
+                        className={`h-[400px] rounded-[24px] overflow-hidden ${item.bg}`}
                     >
                         <Image
                             source={{ uri: item.imageUrl }}
@@ -194,8 +171,8 @@ export default function DeptBannerCarousel() {
 
             {/* 하단 점 (페이지네이션) */}
             <View className="flex-row justify-center mt-4 gap-1.5">
-                {DEPT_BANNER_DATA.map((_, index) => {
-                    const realIndex = currentIndex % DEPT_BANNER_DATA.length;
+                {currentDeptBannerData.map((_, index) => {
+                    const realIndex = currentIndex % currentDeptBannerData.length;
                     return (
                         <View
                             key={index}

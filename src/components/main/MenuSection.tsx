@@ -35,7 +35,7 @@ export default function TodayMenuSection() {
     const [activeTab, setActiveTab] = useState('1');
 
     return (
-        <View className="px-5 py-6 bg-white">
+        <View className="px-5 py-6">
             {/* 1. 헤더 영역 (타이틀 & 더보기) */}
             <View className="flex-row justify-between items-end mb-4">
                 <Text className="text-xl font-extrabold text-gray-900">오늘의 식단</Text>
@@ -62,7 +62,7 @@ export default function TodayMenuSection() {
                             activeOpacity={0.9}
                             onPress={() => setActiveTab(item.id)}
                             // 카드 전체 스타일 (테두리, 둥근 모서리)
-                            className="w-[120px] mr-3 rounded-2xl border border-gray-100 overflow-hidden shadow-sm"
+                            className="w-[120px] mr-3 rounded-2xl border border-gray-100 overflow-hidden"
                         >
                             {/* 상단 탭 (식당 이름) */}
                             <View
