@@ -6,7 +6,7 @@ import QrModal from '../../modals/QrModal';
 import { AuthContext } from '../../contexts/AuthContext';
 
 export default function LoginPrompt() {
-    const { isLoggedIn, setIsLoggedIn } = React.useContext(AuthContext);
+    const { isLoggedIn, setIsLoggedIn, userInfo, setUserInfo } = React.useContext(AuthContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isQrVisible, setIsQrVisible] = useState(false);
 
@@ -14,18 +14,13 @@ export default function LoginPrompt() {
         console.log("QR 코드가 새로고침되었습니다.");
     };
 
-    const studentInfo = {
-        college: "IT 공과대학",
-        department: "전자공학과",
-        id: "221125139",
-        name: "이승주"
-    };
-
     const handleLogout = () => {
         setIsLoggedIn(false);
+        setUserInfo(null);
     };
 
-    const handleLoginSuccess = () => {
+    const handleLoginSuccess = (user: any) => {
+        setUserInfo(user);
         setIsModalVisible(false);
         setIsLoggedIn(true);
     };
@@ -50,7 +45,6 @@ export default function LoginPrompt() {
                     visible={isModalVisible}
                     onClose={() => setIsModalVisible(false)}
                     onLoginSuccess={handleLoginSuccess}
-                    targetId={studentInfo.id}
                 />
             </View>
         );
@@ -61,11 +55,11 @@ export default function LoginPrompt() {
             <View style={styles.infoRow}>
                 <View style={styles.studentInfoArea}>
                     <View style={styles.collegeBadge}>
-                        <Text style={styles.collegeText}>{studentInfo.college}</Text>
+                        <Text style={styles.collegeText}>{userInfo?.college}</Text>
                     </View>
-                    <Text style={styles.nameText}>{studentInfo.name}</Text>
+                    <Text style={styles.nameText}>{userInfo?.name}</Text>
                     <Text style={styles.idText}>
-                        {studentInfo.department} · {studentInfo.id}
+                        {userInfo?.department} · {userInfo?.id}
                     </Text>
                 </View>
 

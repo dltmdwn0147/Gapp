@@ -1,3 +1,4 @@
+import "react-native-reanimated";
 import "./global.css";
 import React, { useState } from 'react';
 import { View, StyleSheet, LogBox } from 'react-native';
@@ -14,6 +15,7 @@ import MainScreen from "./src/screens/MainScreen";
 import NoticeScreen from "./src/screens/NoticeScreen";
 import BottomNav from "./src/components/common/BottomNav";
 import { AuthContext } from './src/contexts/AuthContext'; // ✨ 외부 Context 임포트
+import LoginRequiredModal from "./src/modals/LoginRequireModal"; // ✨ 전역 로그인 모달 임포트
 
 const Tab = createBottomTabNavigator(); // ✨ Stack 대신 Tab 사용
 
@@ -23,12 +25,18 @@ const renderTabBar = (props: any) => <BottomNav {...props} />;
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false); // ✨ 전역 로그인 모달 상태 추가
 
   // ✨ 컨텍스트 값을 메모이제이션하여 불필요한 하위 리렌더링 방지
   const authContextValue = React.useMemo(() => ({
     isLoggedIn,
-    setIsLoggedIn
-  }), [isLoggedIn]);
+    setIsLoggedIn,
+    userInfo,
+    setUserInfo,
+    showLoginModal,
+    setShowLoginModal
+  }), [isLoggedIn, userInfo, showLoginModal]);
 
   const handleSplashFinish = () => {
     setIsAppReady(true);
@@ -49,6 +57,13 @@ export default function App() {
               <Tab.Screen name="Notice" component={NoticeScreen} />
             </Tab.Navigator>
           )}
+          
+          {/* ✨ 앱 전체에서 사용 가능한 전역 로그인 요구 모달 */}
+          <LoginRequiredModal 
+            visible={showLoginModal} 
+            onClose={() => setShowLoginModal(false)} 
+          />
+          
           <StatusBar style="dark" />
         </View>
       </NavigationContainer>

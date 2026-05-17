@@ -15,10 +15,10 @@ export default function MainScreen() {
 
     return (
         <LinearGradient
-            colors={['#cffafe', '#ecfeff', '#f8fafc']}
+            colors={['#6daffcff', '#a2defaff', '#fcfcffff']}
             // 🌟 locations를 지우고 start, end를 추가해 은은한 사선 그라데이션 완성!
             start={{ x: 0, y: 0 }}
-            end={{ x: 0.8, y: 1 }}
+            end={{ x: 0.5, y: 1 }}
             className="flex-1 pt-10"
         >
             <Header />

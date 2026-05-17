@@ -181,7 +181,7 @@ export default function BannerCarousel() {
                         activeOpacity={0.9}
                         // ✨ 5. marginRight 제거! (ItemSeparatorComponent가 간격을 대신 띄워줌)
                         style={{ width: CAROUSEL_WIDTH }}
-                        className={`h-[400px] rounded-[24px] shadow-sm overflow-hidden ${item.bg}`}
+                        className={`h-[400px] rounded-[24px] overflow-hidden ${item.bg}`}
                     >
                         {/* 배경 사진 절대 좌표 배치 */}
                         <Image

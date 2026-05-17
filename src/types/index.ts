@@ -16,3 +16,15 @@ export interface MenuItem {
     place: string;
     name: string;
 }
+
+export interface NoticeItemProps {
+    id: string;
+    type: string;
+    category: string;
+    title: string;
+    department: string;
+    date: string;
+    targetYear?: string;
+}
+
+export interface DeptNoticeItemProps extends NoticeItemProps {}
