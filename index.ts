@@ -1,4 +1,5 @@
 import 'react-native-reanimated';
+import './src/nativewind-setup';
 import { registerRootComponent } from 'expo';
 
 import App from './App';

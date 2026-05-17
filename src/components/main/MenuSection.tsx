@@ -80,7 +80,7 @@ export default function TodayMenuSection() {
                             {/* 중앙 음식 사진 */}
                             <Image
                                 source={{ uri: item.imageUrl }}
-                                className="w-full h-[110px]"
+                                style={{ width: '100%', height: 110 }}
                                 resizeMode="cover"
                             />
 

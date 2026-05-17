@@ -8,7 +8,8 @@ import { StatusBar } from "expo-status-bar";
 LogBox.ignoreLogs(['[Reanimated] Reading from `value` during component render.', '[Reanimated] Writing to `value` during component render.']);
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // ✨ Tab Navigator 추가
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import SplashView from './src/components/common/SplashView';
 import MainScreen from "./src/screens/MainScreen";
@@ -43,6 +44,7 @@ export default function App() {
   };
 
   return (
+    <SafeAreaProvider>
     <AuthContext.Provider value={authContextValue}>
       <NavigationContainer>
         <View style={styles.container}>
@@ -68,6 +70,7 @@ export default function App() {
         </View>
       </NavigationContainer>
     </AuthContext.Provider>
+    </SafeAreaProvider>
   );
 }
 

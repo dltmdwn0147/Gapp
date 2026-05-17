@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 export default function Header() {
     return (
-        <View className="flex-row items-center justify-between px-5 pt-5 pb-4 bg-transparent">
+        <View className="flex-row items-center justify-between px-5 pt-2 pb-4 bg-transparent">
             {/* 텍스트 대신 로고 이미지 적용 */}
             <Image
                 source={require('../../../assets/GNU_logo.png')}

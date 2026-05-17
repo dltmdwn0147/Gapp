@@ -1,6 +1,6 @@
 // src/components/QrModal.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
 import { QrCode, RefreshCw, X } from 'lucide-react-native'; // 아이콘들
 
 interface QrModalProps {
@@ -17,13 +17,17 @@ export default function QrModal({ visible, onClose, onRefresh }: QrModalProps) {
             animationType="fade"
             onRequestClose={onClose}
         >
-            <TouchableOpacity
-                activeOpacity={1}
+            <Pressable
                 onPress={onClose}
-                className="flex-1 bg-black/60 items-center justify-center"
+                style={{
+                    flex: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
             >
-                {/* 모달 본체 */}
-                <View className="bg-white p-8 rounded-3xl items-center w-[85%]">
+                <Pressable onPress={(e) => e.stopPropagation()}>
+                <View className="bg-white p-8 rounded-3xl items-center" style={{ width: '85%' }}>
                     {/* 상단 제목과 닫기 버튼 */}
                     <View className="flex-row justify-between items-center w-full mb-6">
                         <Text className="text-lg font-bold text-gray-900">모바일 출입증</Text>
@@ -50,7 +54,8 @@ export default function QrModal({ visible, onClose, onRefresh }: QrModalProps) {
                         건물 출입 시 스캔하세요
                     </Text>
                 </View>
-            </TouchableOpacity>
+                </Pressable>
+            </Pressable>
         </Modal>
     );
 }

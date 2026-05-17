@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useContext } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import { Search, Filter, Lock, X, Check } from 'lucide-react-native';
 import NoticeItem from '../components/Notice/NoticeItem';
@@ -8,6 +9,7 @@ import DeptNoticeItem from '../components/Notice/DeptNoticeItem';
 import { MOCK_NOTICES } from '../data/noticeData';
 import { DEPT_NOTICES_BY_DEPT } from '../data/deptNoticeData';
 import { AuthContext } from '../contexts/AuthContext';
+import { SCROLL_BOTTOM_PADDING } from '../constants/layout';
 
 const UNIV_CATEGORIES = ['전체', '학사', '장학', '교내기관', '외부기관'];
 const DEPT_CATEGORIES = ['전체', '학과', '채용', '행사', '장학'];
@@ -17,6 +19,7 @@ const SORT_OPTIONS = ['최신순', '과거순'];
 
 export default function NoticeScreen({ navigation }: any) {
     const { isLoggedIn, setIsLoggedIn, userInfo, setUserInfo, setShowLoginModal } = useContext(AuthContext);
+    const insets = useSafeAreaInsets();
 
     const [mode, setMode] = useState<'dept' | 'univ'>('univ');
     const [searchQuery, setSearchQuery] = useState('');
@@ -96,7 +99,10 @@ export default function NoticeScreen({ navigation }: any) {
         <View className="flex-1 bg-white">
 
             {/* ─── 상단 헤더 ─── */}
-            <View className="pt-12 pb-4 px-4 flex-row items-center justify-between border-b border-gray-100">
+            <View
+                className="pb-4 px-4 flex-row items-center justify-between border-b border-gray-100"
+                style={{ paddingTop: insets.top + 8 }}
+            >
                 <View className="flex-1 pr-2">
                     <Text className="text-xs text-blue-600 font-bold mb-0.5" numberOfLines={1}>
                         {mode === 'dept' ? `경상국립대학교 ${userInfo?.department || '학과'}` : '경상국립대학교'}
@@ -205,7 +211,7 @@ export default function NoticeScreen({ navigation }: any) {
                         ? <DeptNoticeItem {...item} />
                         : <NoticeItem {...item} />
                 }
-                contentContainerStyle={{ paddingBottom: 100 }}
+                contentContainerStyle={{ paddingBottom: SCROLL_BOTTOM_PADDING + insets.bottom }}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={
                     <View className="flex-1 items-center justify-center pt-20">
@@ -227,7 +233,7 @@ export default function NoticeScreen({ navigation }: any) {
                 useNativeDriver={false}
                 style={{ margin: 0, justifyContent: 'flex-end' }}
             >
-                <View className="bg-white rounded-t-3xl p-6 pb-10">
+                <View className="bg-white rounded-t-3xl p-6" style={{ paddingBottom: insets.bottom + 24 }}>
                     {/* 모달 상단부 */}
                     <View className="flex-row justify-between items-center mb-6">
                         <Text className="text-lg font-bold text-gray-900">상세 필터</Text>

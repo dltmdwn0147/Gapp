@@ -13,7 +13,8 @@
       "backgroundColor": "#E0F2FE"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.myschool.app"
     },
     "android": {
       "adaptiveIcon": {
